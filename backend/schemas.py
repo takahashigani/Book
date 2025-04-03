@@ -1,11 +1,21 @@
 from datetime import date
 from pydantic import BaseModel, ConfigDict
+from enum import Enum as PyEnum
+
+class ReadingStatusSchema(PyEnum):
+    WANT_TO_READ = "want_to_read"
+    READING = "reading"
+    COMPLETED = "completed"
 
 class BookBase(BaseModel):
     title: str
     author: str
-    published_date: date
-    summary: str
+    published_date: date | None = None
+    summary: str | None = None
+    reading_status = ReadingStatusSchema
+    page_count = int | None = None
+    cover_image_url = str | None = None
+    isbn = str | None = None
     
 class BookCreate(BookBase):
     pass
