@@ -1,7 +1,7 @@
 import '../entities/book.dart';
 
 abstract class BookRepository {
-  Future<List<Book>> getBookByStatus(ReadingStatus status);
+  Future<List<Book>> getBooksByStatus(ReadingStatus status);
 
   Future<void> addBook(Book book);
 
