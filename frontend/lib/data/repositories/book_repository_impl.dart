@@ -75,6 +75,4 @@ class BookRepositoryImpl implements BookRepository {
       isbn: json['isbn'] as String?,
     );
   }
-
-
 }
