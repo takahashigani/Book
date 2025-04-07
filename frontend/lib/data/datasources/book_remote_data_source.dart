@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 abstract class BookRemoteDataSource
 {
   Future<List<Map<String, dynamic>>> getBooksByStatus(ReadingStatus status);
-  Future<void> addBook(Map<String, dynamic> book);
+  Future<void> addBook(Book book);
   Future<void> updateBookStatus(int id, String status);
   Future<List<Map<String, dynamic>>> getAllBooks();
   Future<void> deleteBook(int id);
@@ -39,7 +39,7 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   }
 
   @override
-  Future<void> addBook(Map<String, dynamic> book) async
+  Future<void> addBook(Book book) async
   {
     final response = await client.post(
       Uri.parse('$baseUrl/books/'),

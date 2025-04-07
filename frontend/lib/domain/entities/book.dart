@@ -6,7 +6,7 @@ enum ReadingStatus {
 
 class Book {
 
-  final String id;
+  final int id;
   final String title;
   final String author;
   final DateTime? publishedDate;
