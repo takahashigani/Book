@@ -1,3 +1,5 @@
+from os import read
+from typing import Optional
 from sqlalchemy.orm import Session
 import models
 import schemas
@@ -9,8 +11,11 @@ def create_book(db: Session, book: schemas.BookCreate):
     db.refresh(db_book)
     return db_book
 
-def get_books(db: Session, skip: int, limit: int = 1000):
-    return db.query(models.BookModel).offset(skip).limit(limit).all()
+def get_books(db: Session, reading_status: Optional[str] = None, skip: int = 0, limit: int = 1000):
+    query = db.query(models.BookModel)
+    if(reading_status):
+        query = query.filter(models.BookModel.reading_status == reading_status)
+    return query.offset(skip).limit(limit).all()
 
 def get_book(db: Session, book_id: int):
     return db.query(models.BookModel).filter(models.BookModel.id == book_id).first()

@@ -1,7 +1,7 @@
 import logging
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import database
 import schemas
 import crud
@@ -41,7 +41,9 @@ def create_book_endpoint(book: schemas.BookCreate, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Could not create book")
 
 @app.get("/books/", response_model=List[schemas.Book])
-def read_books_endpoint(skip: int=0, limit: int=100, db: Session = Depends(get_db)):
+def read_books_endpoint(
+    reading_status: Optional[str] = Query(None, description="Filter books by reading status (e.g., 'reading', 'completed', 'want_to_read')"),
+    skip: int=0, limit: int=100, db: Session = Depends(get_db)):
     books = crud.get_books(db=db, skip=skip, limit=limit)
     return books
 
