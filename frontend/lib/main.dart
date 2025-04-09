@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try{
+    // Load environment variables from .env file
+    await dotenv.load(fileName: ".env");
+    print('.env file loaded successfully');
+  } catch (e) {
+    print('Error loading .env file: $e');
+  }
+
+  runApp(
+      ProviderScope(
+          child: const MyApp()
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,23 +58,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final apiKey = dotenv.env['GOOGLE_BOOKS_API_KEY'] ?? 'No API Key found';
 
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Your Google Books Apikey:',
             ),
             Text(
-              '$_counter',
+              '$apiKey',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
