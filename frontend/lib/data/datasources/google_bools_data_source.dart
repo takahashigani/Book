@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 abstract class GoogleBooksDataSource
 {
-  Future<List<SerchedBookModel>> serchBooks(String query);
+  Future<List<SearchedBookModel>> searchBooks(String query);
 }
 
 class GoogleBooksDataSourceImpl implements GoogleBooksDataSource{
@@ -17,7 +17,7 @@ class GoogleBooksDataSourceImpl implements GoogleBooksDataSource{
   GoogleBooksDataSourceImpl({required this.client});
 
   @override
-  Future<List<SerchedBookModel>> serchBooks(String query) async{
+  Future<List<SearchedBookModel>> searchBooks(String query) async{
     if(apiKey.isEmpty) throw Exception('API key is not set');
 
     final encodedQuery = Uri.encodeComponent(query);
@@ -30,7 +30,7 @@ class GoogleBooksDataSourceImpl implements GoogleBooksDataSource{
         final Map<String, dynamic> data = json.decode(response.body);
         if(data.containsKey('items') && data['items'] is List) {
           final List<dynamic> items = data['items'];
-          return items.map((item) => SerchedBookModel.fromJson(item)).toList();
+          return items.map((item) => SearchedBookModel.fromJson(item)).toList();
         } else {
           return [];
         }

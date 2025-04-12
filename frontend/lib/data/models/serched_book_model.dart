@@ -66,24 +66,24 @@ class VolumeInfoModel{
   }
 }
 
-class SerchedBookModel{
+class SearchedBookModel{
   final String id;
   final VolumeInfoModel volumeInfo;
 
-  const SerchedBookModel({
+  const SearchedBookModel({
     required this.id,
     required this.volumeInfo,
   });
 
-  factory SerchedBookModel.fromJson(Map<String, dynamic> json) {
+  factory SearchedBookModel.fromJson(Map<String, dynamic> json) {
     if(json['volumeInfo'] == null) {
       print('volumeInfo is null');
-      return SerchedBookModel(
+      return SearchedBookModel(
           id: json['id'] as String? ?? '',
           volumeInfo: const VolumeInfoModel(title: 'タイトル不明', authors: [], industryIdentifiers: [])
       );
     }
-    return SerchedBookModel(
+    return SearchedBookModel(
       id: json['id'] as String? ?? '', // nullチェックを追加
       volumeInfo: VolumeInfoModel.fromJson(json['volumeInfo']), // nullチェックを追加
     );
