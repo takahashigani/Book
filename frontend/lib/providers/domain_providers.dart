@@ -2,7 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/domain/usecases/search_books.dart';
 
-final searchBooksProvider = Provider<SearchBooks>((ref) {
+final searchBooksUseCaseProvider = Provider<SearchBooks>((ref) {
   return SearchBooks(ref);
 });
 
