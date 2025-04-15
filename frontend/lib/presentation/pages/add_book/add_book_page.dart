@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/data/models/serched_book_model.dart';
 import 'package:frontend/domain/usecases/add_book.dart';
 import 'package:frontend/providers/presentation_providers.dart';
 
@@ -71,8 +72,57 @@ class AddBookPage extends ConsumerWidget {
 
   // 検索結果を表示するWidget
   Widget _buildSearchResults(WidgetRef ref) {
-    return const Center(
-      child: Text('ここに検索結果が入ります'),
+    final searchState = ref.watch(searchBookProvider);
+    return searchState.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('エラー: $error'),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                final keyword = ref.read(searchKeywordProvider);
+                ref.read(searchBookProvider.notifier).search(keyword);
+              },
+              child: const Text('再試行'),
+            )
+          ]
+        )
+      ),
+
+      data: (books) {
+        if (books.isEmpty) {
+          return const Center(child: Text('本が見つかりませんでした'));
+        }
+        return ListView.builder(
+          itemCount: books.length,
+          itemBuilder: (context, index) {
+            final book = books[index];
+            final volumeInfo = book.volumeInfo;
+            final imageUrl = volumeInfo.imageLinks?.thumbnail ?? volumeInfo.imageLinks?.smallThumbnail;
+
+            return ListTile(
+              leading: imageUrl != null
+                  ? Image.network(imageUrl, width: 40, fit: BoxFit.cover,
+                  errorBuilder: (c, e, s) => const Icon(Icons.broken_image, size: 40,),)
+                  : const Icon(Icons.book, size: 40,),
+              title: Text(volumeInfo.title),
+              subtitle: Text(volumeInfo.authors?.join(', ') ?? '著者不明'),
+              onTap: () {
+                print('本がタップされました: ${volumeInfo.title}');
+                _showAddBookDialog(context, ref, book);
+              }
+            );
+          }
+        );
+      }
     );
+  }
+
+  void _showAddBookDialog(BuildContext context, WidgetRef ref, SearchedBookModel book) {
+
   }
 }
