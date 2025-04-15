@@ -7,6 +7,7 @@ enum ReadingStatus {
 class Book {
 
   final int id;
+  final int? googleBooksId;
   final String title;
   final String author;
   final DateTime? publishedDate;
@@ -18,6 +19,7 @@ class Book {
 
   Book({
     required this.id,
+    this.googleBooksId,
     required this.title,
     required this.author,
     this.publishedDate,

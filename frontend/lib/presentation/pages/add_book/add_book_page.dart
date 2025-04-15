@@ -4,6 +4,7 @@ import 'package:frontend/data/models/serched_book_model.dart';
 import 'package:frontend/domain/usecases/add_book.dart';
 import 'package:frontend/providers/presentation_providers.dart';
 
+import '../../../domain/entities/book.dart';
 import '../../notifiers/add_book/search_book_notifier.dart';
 
 class AddBookPage extends ConsumerWidget {
@@ -124,5 +125,18 @@ class AddBookPage extends ConsumerWidget {
 
   void _showAddBookDialog(BuildContext context, WidgetRef ref, SearchedBookModel book) {
 
+  }
+
+  String _statusToString(ReadingStatus status) {
+    switch (status) {
+      case ReadingStatus.reading:
+        return '読書中';
+      case ReadingStatus.completed:
+        return '読了';
+      case ReadingStatus.wantToRead:
+        return '読みたい';
+      default:
+        return '不明';
+    }
   }
 }
