@@ -20,14 +20,20 @@ def get_books(db: Session, reading_status: Optional[str] = None, skip: int = 0, 
 def get_book(db: Session, book_id: int):
     return db.query(models.BookModel).filter(models.BookModel.id == book_id).first()
 
-def update_book(db: Session, book_id: int, book: schemas.BookCreate):
+def update_book(db: Session, book_id: int, book_update_data: schemas.BookCreate):
     db_book = db.query(models.BookModel).filter(models.BookModel.id == book_id).first()
     if db_book:
-        db_book.title = book.title
-        db_book.author = book.author
-        db_book.published_date = book.published_date
-        db_book.summary = book.summary
+        for Key, value in update_book.items():
+            setattr(db_book, Key, value)
         
+        db.commit()
+        db.refresh(db_book)
+    return db_book
+
+def update_book_status(db: Session, book_id: int, status: schemas.ReadingStatusSchema):
+    db_book = db.query(models.BookModel).filter(models.BookModel.id == book_id).first()
+    if(db_book):
+        db_book.reading_status = status
         db.commit()
         db.refresh(db_book)
     return db_book
@@ -39,3 +45,14 @@ def delete_book(db: Session, book_id: int):
         db.commit()
         return db_book
     return None
+
+def patch_book(db: Session, book_id: int, book_update: schemas.BookUpdate):
+    db_book = db.query(models.BookModel).filter(models.BookModel.id == book_id).first()
+    if(db_book):
+        update_book = book_update.model_dump(exclude_unset=True)
+        for key, value in update_book.items():
+            setattr(db_book, key, value)
+        db.commit()
+        db.refresh(db_book)
+    return db_book
+    
