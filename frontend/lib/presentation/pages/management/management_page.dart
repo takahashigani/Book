@@ -7,9 +7,9 @@ class ManagementPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('本の管理')),
+      appBar: AppBar(title: const Text('本管理')),
       body: const Center(
-        child: Text('本の管理画面')
+        child: Text('本管理画面')
       ),
     );
   }
