@@ -16,7 +16,7 @@ class BookBase(BaseModel):
     page_count = int | None = None
     cover_image_url = str | None = None
     isbn = str | None = None
-    
+
 class BookUpdate(BaseModel):
     title: str
     author: str
@@ -26,14 +26,14 @@ class BookUpdate(BaseModel):
     page_count = int | None = None
     cover_image_url = str | None = None
     isbn = str | None = None
-    
+
 class BookStatusUpdate(BaseModel):
     reading_status: ReadingStatusSchema
-    
+
 class BookCreate(BookBase):
     pass
 
 class Book(BookBase):
     id: int
-    
+
     model_config = ConfigDict(from_attributes=True)

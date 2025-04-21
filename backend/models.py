@@ -18,6 +18,5 @@ class BookModel(Base):
     page_count = Column(Integer)
     cover_image_url = Column(String)
     isbn = Column(String, index = True)
-    
+
     __table_args__ = (UniqueConstraint('title', 'author', name='_title_author_uc'),)
-    

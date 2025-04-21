@@ -20,7 +20,7 @@ def on_startup():
         models.Base.metadata.create_all(bind=database.engine)
     except Exception as e:
         logger.error(f"Error creating database tables during startup: {e}", exc_info=True)
-        
+
 # --- データベースセッションを取得する Dependency ---
 def get_db():
     db = database.SessionLocal()
@@ -53,13 +53,6 @@ def read_book_endpoint(book_id: int, db: Session = Depends(get_db)):
     if book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return book
-
-@app.put("/books/{book_id}", response_model=schemas.Book)
-def update_book_endpoint(book_id: int, book: schemas.BookCreate, db: Session = Depends(get_db)):
-    updated_book = crud.update_book(db=db, book_id=book_id, book=book)
-    if updated_book is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
-    return updated_book
 
 @app.delete("/books/{book_id}", response_model=schemas.Book)
 def delete_book_endpoint(book_id: int, db: Session = Depends(get_db)):
