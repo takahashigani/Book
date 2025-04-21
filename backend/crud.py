@@ -5,6 +5,15 @@ import models
 import schemas
 
 def create_book(db: Session, book: schemas.BookCreate):
+    ## book.titleとbook.authorが既に登録していないかをチェック
+    exiting_book = db.query(models.BookModel).filter(
+        models.BookModel.title == book.title,
+        models.BookModel.author == book.author
+    ).first()
+
+    if exiting_book:
+        raise ValueError("Book with the same title and author already exists.")
+
     db_book = models.BookModel(**book.model_dump())
     db.add(db_book)
     db.commit()
@@ -25,7 +34,6 @@ def update_book(db: Session, book_id: int, book_update_data: schemas.BookCreate)
     if db_book:
         for Key, value in update_book.items():
             setattr(db_book, Key, value)
-        
         db.commit()
         db.refresh(db_book)
     return db_book
@@ -55,4 +63,3 @@ def patch_book(db: Session, book_id: int, book_update: schemas.BookUpdate):
         db.commit()
         db.refresh(db_book)
     return db_book
-    

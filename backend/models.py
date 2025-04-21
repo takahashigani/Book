@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Date, Enum
+from sqlalchemy import Column, Integer, String, Date, Enum, UniqueConstraint
 from database import Base
 
 class ReadingStatusEnum(enum.Enum):
@@ -18,4 +18,6 @@ class BookModel(Base):
     page_count = Column(Integer)
     cover_image_url = Column(String)
     isbn = Column(String, index = True)
+    
+    __table_args__ = (UniqueConstraint('title', 'author', name='_title_author_uc'),)
     
