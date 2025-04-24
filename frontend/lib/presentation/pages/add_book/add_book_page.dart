@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/data/models/serched_book_model.dart';
-import 'package:frontend/domain/usecases/add_book.dart';
+import 'package:frontend/providers/domain_providers.dart';
 import 'package:frontend/providers/presentation_providers.dart';
 
 import '../../../domain/entities/book.dart';
@@ -203,10 +203,10 @@ class AddBookPage extends ConsumerWidget {
 
                           // 2. 登録用UseCaseの窓口(addBookUseCaseProvider)から担当者を呼ぶ
                           //    (addBookUseCaseProvider が事前に定義されている前提)
-                          //final addBook = ref.read(addBookUseCaseProvider);
+                          final addBook = ref.read(addBookUseCaseProvider);
 
                           // 3. 担当者に「この本を登録して！」とお願いする
-                          //await addBook(newBook);
+                          await addBook(newBook);
 
                           Navigator.pop(dialogContext); // ダイアログを閉じる
 

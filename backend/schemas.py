@@ -23,9 +23,9 @@ class BookUpdate(BaseModel):
     published_date: date | None = None
     summary: str | None = None
     reading_status: ReadingStatusSchema
-    page_count = int | None = None
-    cover_image_url = str | None = None
-    isbn = str | None = None
+    page_count : int | None = None
+    cover_image_url : str | None = None
+    isbn : str | None = None
 
 class BookStatusUpdate(BaseModel):
     reading_status: ReadingStatusSchema

@@ -1,5 +1,6 @@
 // SearchBooks Usecaseの窓口(Provider)を作成
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/domain/usecases/add_book.dart';
 import 'package:frontend/domain/usecases/get_books_by_status.dart';
 import 'package:frontend/domain/usecases/search_books.dart';
 import 'package:frontend/domain/usecases/update_book_status.dart';
@@ -20,4 +21,10 @@ final getBooksByStatusUseCaseProvider = Provider<GetBooksByStatus>((ref){
 final updateBookStatusProvider = Provider<UpdateBookStatus>((ref){
   final repository = ref.watch(bookRepositoryProvider);
   return UpdateBookStatus(repository);
+});
+
+// 登録用UseCaseの窓口(addBookUseCaseProvider)
+final addBookUseCaseProvider = Provider<AddBook>((ref) {
+  final repository = ref.watch(bookRepositoryProvider);
+  return AddBook(repository);
 });

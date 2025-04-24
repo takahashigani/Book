@@ -15,7 +15,7 @@ abstract class BookRemoteDataSource
 class BookRemoteDataSourceImpl implements BookRemoteDataSource
 {
   final http.Client client = http.Client();
-  final String baseUrl = 'http://YOUR_BACKEND_IP:PORT'; // Replace with your backend URL
+  final String baseUrl = 'http://10.0.2.2:8000/'; // Replace with your backend URL
 
   @override
   Future<List<Map<String, dynamic>>> getBooksByStatus(ReadingStatus status) async
