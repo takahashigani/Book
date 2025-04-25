@@ -37,7 +37,7 @@ def create_book_endpoint(book: schemas.BookCreate, db: Session = Depends(get_db)
         created_book = crud.create_book(db=db, book=book)
         return created_book
     except Exception as e:
-        print(f"Error creating books: {e}")
+        logger.error(f"Error creating book: {e}", exc_info=True)  # 詳細なエラーログを記録
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Could not create book")
 
 @app.get("/books/", response_model=List[schemas.Book])

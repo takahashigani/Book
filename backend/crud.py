@@ -18,7 +18,7 @@ def create_book(db: Session, book: schemas.BookCreate):
     if exiting_book:
         raise ValueError("Book with the same title and author already exists.")
 
-    db_book = models.BookModel(**book.model_dump())
+    db_book = models.BookModel(**book.dict())
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
