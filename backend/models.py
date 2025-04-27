@@ -14,7 +14,7 @@ class BookModel(Base):
     author = Column(String)
     published_date = Column(Date)
     summary = Column(String)
-    reading_status = Column(Enum(ReadingStatusEnum))
+    reading_status = Column(Enum(ReadingStatusEnum, use_value_for_type=True))
     page_count = Column(Integer)
     cover_image_url = Column(String)
     isbn = Column(String, index = True)
