@@ -15,7 +15,7 @@ abstract class BookRemoteDataSource
 class BookRemoteDataSourceImpl implements BookRemoteDataSource
 {
   final http.Client client = http.Client();
-  final String baseUrl = 'http://10.0.2.2:8000/'; // Replace with your backend URL
+  final String baseUrl = 'http://10.0.2.2:8000'; // Replace with your backend URL
 
   @override
   Future<List<Map<String, dynamic>>> getBooksByStatus(ReadingStatus status) async
@@ -46,7 +46,19 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
       headers: {
         'Content-Type': 'application/json',
       },
-      body: json.encode(book),
+      // bookのIDを除いたデータを送信
+      body: json.encode(
+        {
+          'title': book.title,
+          'author': book.author,
+          'published_date': book.publishedDate?.toIso8601String(),
+          'summary': book.summary,
+          'reading_status': book.readingStatus.name,
+          'page_count': book.pageCount,
+          'cover_image_url': book.coverImageUrl,
+          'isbn': book.isbn,
+        },
+      ),
     );
 
     if (response.statusCode != 201) {
