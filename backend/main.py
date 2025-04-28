@@ -47,28 +47,28 @@ def read_books_endpoint(
     books = crud.get_books(db=db, reading_status=reading_status, skip=skip, limit=limit)
     return books
 
-@app.get("/books/{book_id}", response_model=schemas.Book )
+@app.get("/books/{book_id}/", response_model=schemas.Book )
 def read_book_endpoint(book_id: int, db: Session = Depends(get_db)):
     book = crud.get_book(db=db, book_id=book_id)
     if book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return book
 
-@app.delete("/books/{book_id}", response_model=schemas.Book)
+@app.delete("/books/{book_id}/", response_model=schemas.Book)
 def delete_book_endpoint(book_id: int, db: Session = Depends(get_db)):
     deleted_book = crud.delete_book(db=db, book_id=book_id)
     if deleted_book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return deleted_book
 
-@app.patch("/books/{book_id}", response_model=schemas.Book)
+@app.patch("/books/{book_id}/", response_model=schemas.Book)
 def patch_book_endpoint(book_id: int, book_update: schemas.BookUpdate, db: Session = Depends(get_db)):
     updated_book = crud.patch_book(db=db, book_id=book_id, book_update=book_update)
     if updated_book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return updated_book
 
-@app.patch("/books/{book_id}/status", response_model=schemas.Book)
+@app.patch("/books/{book_id}/status/", response_model=schemas.Book)
 def update_book_status_endpoint(book_id: int, status_update: schemas.BookStatusUpdate, db: Session = Depends(get_db)):
     updated_book = crud.update_book_status(db=db, book_id=book_id, status=status_update.reading_status)
     if updated_book is None:

@@ -70,7 +70,7 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   Future<void> updateBookStatus(int id, String status) async
   {
     final response = await client.patch(
-      Uri.parse('$baseUrl/books/$id/'),
+      Uri.parse('$baseUrl/books/$id/status/'),
       headers: {
         'Content-Type': 'application/json',
       },
