@@ -39,7 +39,8 @@ def create_book(db: Session, book: schemas.BookCreate):
 def get_books(db: Session, reading_status: Optional[str] = None, skip: int = 0, limit: int = 1000):
     query = db.query(models.BookModel)
     if(reading_status):
-        query = query.filter(models.BookModel.reading_status == reading_status)
+        status_enum = models.ReadingStatusEnum(reading_status)
+        query = query.filter(models.BookModel.reading_status == status_enum)
     db_books = query.offset(skip).limit(limit).all()
     return [schemas.Book.model_validate(book) for book in db_books]
 
