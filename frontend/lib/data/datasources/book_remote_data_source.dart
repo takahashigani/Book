@@ -31,8 +31,11 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
     );
 
     if (response.statusCode == 200){
-     List<dynamic> jsonResponse = json.decode(response.body);
-     return jsonResponse.cast<Map<String, dynamic>>();
+      // これを入れないと日本語が文字化けする
+      List<int> bodyBytes = response.bodyBytes;
+      String decodedBody = utf8.decode(bodyBytes);
+      List<dynamic> jsonResponse = json.decode(decodedBody);
+      return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load books');
     }
