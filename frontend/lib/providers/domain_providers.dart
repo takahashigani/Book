@@ -1,6 +1,7 @@
 // SearchBooks Usecaseの窓口(Provider)を作成
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/domain/usecases/add_book.dart';
+import 'package:frontend/domain/usecases/delete_book.dart';
 import 'package:frontend/domain/usecases/get_books_by_status.dart';
 import 'package:frontend/domain/usecases/search_books.dart';
 import 'package:frontend/domain/usecases/update_book_status.dart';
@@ -27,4 +28,10 @@ final updateBookStatusProvider = Provider<UpdateBookStatus>((ref){
 final addBookUseCaseProvider = Provider<AddBook>((ref) {
   final repository = ref.watch(bookRepositoryProvider);
   return AddBook(repository);
+});
+
+// DeleteBook Usecaseの窓口(Provider)を作成
+final deleteBookUseCaseProvider = Provider<DeleteBook>((ref) {
+  final repository = ref.watch(bookRepositoryProvider);
+  return DeleteBook(repository);
 });

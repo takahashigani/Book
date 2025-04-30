@@ -178,7 +178,14 @@ class ManagementPage extends ConsumerWidget {
                               groupValue: selectedStatus,
                               onChanged: (value) {
                                 if (value != null) {
-                                  setState(() => selectedStatus = value);
+                                  if(value == book.readingStatus) {
+                                    // 選択した本を削除する
+                                    ref.read(managementProvider.notifier).deleteBook(book.id);
+
+                                  } else {
+                                    // ステータスを変更する
+                                    setState(() => selectedStatus = value);
+                                  }
                                 }
                               },
                               dense: true,

@@ -57,4 +57,19 @@ class ManagementNotifier extends Notifier<ManagementState>{
       );
     }
   }
+
+  Future <void> deleteBook(int bookId) async {
+    try{
+      final deleteBook = ref.read(deleteBookUseCaseProvider);
+      await deleteBook(bookId);
+      await fetchBooks(state.selectedStatus);
+    } catch (e) {
+      print('本の削除エラー: $e');
+      throw Exception('本の削除に失敗しました');
+      state = state.copyWith(
+        status: ManagementStatus.failure,
+        errorMessage: e.toString(),
+      );
+    }
+  }
 }
