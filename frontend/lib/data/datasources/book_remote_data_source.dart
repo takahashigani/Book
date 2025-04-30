@@ -44,6 +44,9 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   @override
   Future<void> addBook(Book book) async
   {
+    String statusString = book.readingStatus.name;
+    if(statusString == "wantToRead") statusString = 'want_to_read';
+
     final response = await client.post(
       Uri.parse('$baseUrl/books/'),
       headers: {
@@ -56,7 +59,7 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
           'author': book.author,
           'published_date': book.publishedDate?.toIso8601String(),
           'summary': book.summary,
-          'reading_status': book.readingStatus.name,
+          'reading_status': statusString,
           'page_count': book.pageCount,
           'cover_image_url': book.coverImageUrl,
           'isbn': book.isbn,
@@ -72,6 +75,8 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   @override
   Future<void> updateBookStatus(int id, String status) async
   {
+    if(status == "wantToRead") status = 'want_to_read';
+
     final response = await client.patch(
       Uri.parse('$baseUrl/books/$id/status/'),
       headers: {
