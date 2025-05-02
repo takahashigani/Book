@@ -178,19 +178,63 @@ class ManagementPage extends ConsumerWidget {
                               groupValue: selectedStatus,
                               onChanged: (value) {
                                 if (value != null) {
-                                  if(value == book.readingStatus) {
-                                    // 選択した本を削除する
-                                    ref.read(managementProvider.notifier).deleteBook(book.id);
-
-                                  } else {
-                                    // ステータスを変更する
-                                    setState(() => selectedStatus = value);
-                                  }
+                                  // ステータスを変更する
+                                  setState(() => selectedStatus = value);
                                 }
                               },
                               dense: true,
                               contentPadding: EdgeInsets.zero,
                             )),
+                    const Divider(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.delete_outline),
+                        label: const Text('本を削除'),
+                        onPressed: () async {
+                          // 削除ダイアログ
+                          final bool? confirmDelete = await showDialog<bool>(
+                            context: context,
+                            builder: (confirmDialogContext) => AlertDialog(
+                              title: const Text('削除の確認'),
+                              content: Text('「${book.title}」を削除してもよろしいですか？\nこの操作は元に戻せません。'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(confirmDialogContext, false),
+                                  child: const Text('キャンセル'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(confirmDialogContext, true),
+                                  child: const Text('削除', style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          /// ---削除処理---
+                          if (confirmDelete == true) {
+                            Navigator.pop(dialogContext);
+                            try{
+                              await ref.read(managementProvider.notifier).deleteBook(book.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('「${book.title}」を削除しました'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              await ref.read(managementProvider.notifier).fetchBooks(ref.read(managementProvider).selectedStatus);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('削除中にエラーが発生しました: ${e.toString()}'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 actions: [
