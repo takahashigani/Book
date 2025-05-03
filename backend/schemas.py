@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 from enum import Enum as PyEnum
 
@@ -10,29 +11,33 @@ class ReadingStatusSchema(PyEnum):
 class BookBase(BaseModel):
     title: str
     author: str
-    published_date: date | None = None
-    summary: str | None = None
-    reading_status: ReadingStatusSchema
-    page_count = int | None = None
-    cover_image_url = str | None = None
-    isbn = str | None = None
+    # 以下、デフォルト値がNoneのフィールドはOptional[型] = None または 型 | None = None の形式で記述します
+    published_date: Optional[date] = None # または published_date: date | None = None
+    summary: Optional[str] = None         # または summary: str | None = None
+    reading_status: str
+    page_count: Optional[int] = None      # ここが元のSyntaxErrorの原因箇所
+    cover_image_url: Optional[str] = None # または cover_image_url: str | None = None
+    isbn: Optional[str] = None            # または isbn: str | None = None
 
 class BookUpdate(BaseModel):
-    title: str
-    author: str
-    published_date: date | None = None
-    summary: str | None = None
-    reading_status: ReadingStatusSchema
-    page_count = int | None = None
-    cover_image_url = str | None = None
-    isbn = str | None = None
+    # PUTやPATCHで部分的な更新を許可する場合、フィールドをOptionalにします
+    title: Optional[str] = None
+    author: Optional[str] = None
+    published_date: Optional[date] = None
+    summary: Optional[str] = None
+    # reading_statusも更新対象にするならOptionalにします
+    reading_status: Optional[ReadingStatusSchema] = None
+    page_count : Optional[int] = None
+    cover_image_url : Optional[str] = None
+    isbn : Optional[str] = None
 
 class BookStatusUpdate(BaseModel):
+    # ステータスのみを更新する場合
     reading_status: ReadingStatusSchema
 
 class BookCreate(BookBase):
-    pass
-
+    reading_status: ReadingStatusSchema
+    
 class Book(BookBase):
     id: int
 

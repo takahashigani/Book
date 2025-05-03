@@ -15,7 +15,7 @@ abstract class BookRemoteDataSource
 class BookRemoteDataSourceImpl implements BookRemoteDataSource
 {
   final http.Client client = http.Client();
-  final String baseUrl = 'http://YOUR_BACKEND_IP:PORT'; // Replace with your backend URL
+  final String baseUrl = 'http://10.0.2.2:8000'; // Replace with your backend URL
 
   @override
   Future<List<Map<String, dynamic>>> getBooksByStatus(ReadingStatus status) async
@@ -31,8 +31,11 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
     );
 
     if (response.statusCode == 200){
-     List<dynamic> jsonResponse = json.decode(response.body);
-     return jsonResponse.cast<Map<String, dynamic>>();
+      // これを入れないと日本語が文字化けする
+      List<int> bodyBytes = response.bodyBytes;
+      String decodedBody = utf8.decode(bodyBytes);
+      List<dynamic> jsonResponse = json.decode(decodedBody);
+      return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load books');
     }
@@ -41,12 +44,27 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   @override
   Future<void> addBook(Book book) async
   {
+    String statusString = book.readingStatus.name;
+    if(statusString == "wantToRead") statusString = 'want_to_read';
+
     final response = await client.post(
       Uri.parse('$baseUrl/books/'),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: json.encode(book),
+      // bookのIDを除いたデータを送信
+      body: json.encode(
+        {
+          'title': book.title,
+          'author': book.author,
+          'published_date': book.publishedDate?.toIso8601String(),
+          'summary': book.summary,
+          'reading_status': statusString,
+          'page_count': book.pageCount,
+          'cover_image_url': book.coverImageUrl,
+          'isbn': book.isbn,
+        },
+      ),
     );
 
     if (response.statusCode != 201) {
@@ -57,8 +75,10 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource
   @override
   Future<void> updateBookStatus(int id, String status) async
   {
+    if(status == "wantToRead") status = 'want_to_read';
+
     final response = await client.patch(
-      Uri.parse('$baseUrl/books/$id/'),
+      Uri.parse('$baseUrl/books/$id/status/'),
       headers: {
         'Content-Type': 'application/json',
       },
