@@ -187,7 +187,6 @@ class ManagementPage extends ConsumerWidget {
                             )),
                     const Divider(),
                     SizedBox(
-                      width: double.infinity,
                       child: TextButton.icon(
                         icon: const Icon(Icons.delete_outline),
                         label: const Text('本を削除'),
@@ -237,6 +236,7 @@ class ManagementPage extends ConsumerWidget {
                     ),
                   ],
                 ),
+                actionsAlignment: MainAxisAlignment.end,
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext),
