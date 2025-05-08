@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/domain/entities/book.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +16,10 @@ abstract class BookRemoteDataSource
 class BookRemoteDataSourceImpl implements BookRemoteDataSource
 {
   final http.Client client = http.Client();
-  final String baseUrl = 'http://10.0.2.2:8000'; // Replace with your backend URL
+  // スマホで実行する場合
+  final String baseUrl = dotenv.env['LOCAL_IPV4_ADDRESS'] ?? '';
+  // スマホエミュレーターで実行する場合
+  //final String baseUrl = 'http://10.0.2.2:8000'; // Replace with your backend URL
 
   @override
   Future<List<Map<String, dynamic>>> getBooksByStatus(ReadingStatus status) async
